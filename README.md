@@ -1,4 +1,4 @@
-# electron-vue-demo
+# stockron
 
 > An electron-vue project
 
