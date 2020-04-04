@@ -1,0 +1,25 @@
+
+{
+  "links": [
+    {
+      "name": "ホーム",
+      "path": "/",
+      "icon": "home"
+    },
+    {
+      "name": "商品",
+      "path": "/products",
+      "icon": "create"
+    },
+    {
+      "name": "データ",
+      "path": "/data",
+      "icon": "board"
+    },
+    {
+      "name": "設定",
+      "path": "/settings",
+      "icon": "spanner"
+    }
+  ]
+}
