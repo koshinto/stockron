@@ -18,6 +18,8 @@
       <input type="number" id="value" placeholder="数量" v-model="form.value">
       <label for="price">単価</label>
       <input type="number" id="price" placeholder="単価" v-model="form.price">
+      <label for="tax">税</label>
+      <input type="checkbox" id="tax" v-model="form.tax">
     </form>
     <button class="btn add" @click="add">追加</button>
     <div v-if="items.length >= 1" >
@@ -60,7 +62,7 @@ export default {
         name: null,
         value: null,
         price: null,
-        taxIncluded: false
+        tax: false
       },
       errors: [],
       total: 0
@@ -78,7 +80,7 @@ export default {
       this.errors = []
       let data = this.form
       if (data.name && data.value && data.price) {
-        let appendItem = { name: data.name, price: data.price, value: data.value, taxIncluded: data.taxIncluded }
+        let appendItem = { name: data.name, price: data.price, value: data.value, tax: data.tax }
         this.items.push(appendItem)
         data.id = ''
         data.name = ''
