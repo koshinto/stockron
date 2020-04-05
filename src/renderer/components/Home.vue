@@ -10,7 +10,7 @@
         <label for="phone">電話番号</label><br/>
         <input type="text" id="phone" placeholder="電話番号" v-model="client.phone">
         <label for="memo">備考</label>
-        <textarea id="memo" rows="10"></textarea>
+        <textarea id="memo" rows="10" v-model="client.memo"></textarea>
       </form>
       <button class="btn agree" @click="submit">次へ進む</button>
   </div>

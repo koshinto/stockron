@@ -2,9 +2,10 @@
   <div id="main">
     <h3>商品情報入力</h3>
     <ul class="info" style="font-size: 0.8em">
-      <li>購入者:  <span style="font-weight:bold">{{ person.name }}</span></li>
-      <li>配送先:  <span style="font-weight:bold">{{ person.address }}</span></li>
-      <li>電話番号:  <span style="font-weight:bold">{{ person.phone }}</span></li>
+      <li>購入者:  <span style="font-weight:bold">{{ client.name }}</span></li>
+      <li>配送先:  <span style="font-weight:bold">{{ client.address }}</span></li>
+      <li>電話番号:  <span style="font-weight:bold">{{ client.phone }}</span></li>
+      <li>備考:  <span style="font-weight:bold">{{ client.memo }}</span></li>
     </ul>
     <infomations :errors="errors"/>
 
@@ -47,10 +48,11 @@ export default {
   components: { Infomations },
   data () {
     return {
-      person: {
+      client: {
         name: '',
         phone: '',
-        address: ''
+        address: '',
+        memo: ''
       },
       items: [],
       form: {
@@ -66,9 +68,10 @@ export default {
   },
   created: function () {
     let client = JSON.parse(sessionStorage.getItem('client'))
-    this.person.name = client.name
-    this.person.phone = client.phone
-    this.person.address = client.address
+    this.client.name = client.name
+    this.client.phone = client.phone
+    this.client.address = client.address
+    this.client.memo = client.memo
   },
   methods: {
     add () {

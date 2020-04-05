@@ -37,7 +37,7 @@ function createWindow () {
     width: 800,
     webPreferences: {
       nodeIntegration: true
-    },
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -76,7 +76,6 @@ function historyOfDatas () {
 let basket = new Basket()
 
 ipcMain.handle('request:receipt', async (e, args) => {
-  // 請求書・領収書作成用のデータを成形する
   const client = args[0]
   const inBaskets = args[1]
   console.log(`Basket in ${JSON.stringify(inBaskets)}`)
@@ -86,6 +85,11 @@ ipcMain.handle('request:receipt', async (e, args) => {
   doc.name = client.name
   doc.phone = client.phone
   doc.address = client.address
+  doc.memo = client.memo
+  /**
+   * Change hash generate to Confirn Page
+   * Hash value is unique in DB
+   * */
   const todayString = new Date().toString()
   doc.date = todayString
   doc.hash = md5(todayString)
