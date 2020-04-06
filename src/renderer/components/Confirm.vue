@@ -6,7 +6,7 @@
       <li>購入者:  <span style="font-weight:bold;">{{ client.name }}</span></li>
       <li>配送先:  <span style="font-weight:bold;">{{ client.address }}</span></li>
       <li>電話番号:  <span style="font-weight:bold;">{{ client.phone }}</span></li>
-      <li>備考:  <span style="font-weight:bold">{{ client.memo }}</span></li>
+      <li>備考:  <span style="font-weight:bold">{{ client.note }}</span></li>
     </ul>
     <h4>お届け商品情報</h4>
     <ul>
@@ -29,7 +29,7 @@ export default {
         name: '',
         phone: '',
         address: '',
-        memo: ''
+        note: ''
       },
       items: []
     }
@@ -41,7 +41,7 @@ export default {
     this.client.name = client.name
     this.client.phone = client.phone
     this.client.address = client.address
-    this.client.memo = client.memo
+    this.client.note = client.note
   },
   methods: {
     submit () {

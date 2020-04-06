@@ -85,7 +85,7 @@ ipcMain.handle('request:receipt', async (e, args) => {
   doc.name = client.name
   doc.phone = client.phone
   doc.address = client.address
-  doc.memo = client.memo
+  doc.note = client.note
   /**
    * Change hash generate to Confirn Page
    * Hash value is unique in DB

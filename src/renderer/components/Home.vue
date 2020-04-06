@@ -9,8 +9,8 @@
         <input type="text" id="address" placeholder="お届け先住所" v-model="client.address">
         <label for="phone">電話番号</label><br/>
         <input type="text" id="phone" placeholder="電話番号" v-model="client.phone">
-        <label for="memo">備考</label>
-        <textarea id="memo" rows="10" v-model="client.memo"></textarea>
+        <label for="note">備考</label>
+        <textarea id="note" rows="10" v-model="client.note"></textarea>
       </form>
       <button class="btn agree" @click="submit">次へ進む</button>
   </div>
@@ -22,7 +22,7 @@ export default {
   components: { Infomations },
   data () {
     return {
-      client: { name: '', phone: '', address: '', memo: '' },
+      client: { name: '', phone: '', address: '', note: '' },
       errors: []
     }
   },
@@ -33,7 +33,7 @@ export default {
     submit () {
       this.errors = []
       if (this.client.name && this.client.phone && this.client.address) {
-        let clientData = { name: this.client.name, address: this.client.address, phone: this.client.phone, memo: this.client.memo }
+        let clientData = { name: this.client.name, address: this.client.address, phone: this.client.phone, note: this.client.note }
         sessionStorage.setItem('client', JSON.stringify(clientData))
         this.$router.push({ path: '/select' })
       } else {
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style>
-#memo {
+#note {
   display: block;
   width: 100%;
 }
