@@ -1,12 +1,7 @@
 <template>
   <div id="main">
     <h3>商品情報入力</h3>
-    <ul class="info" style="font-size: 0.8em">
-      <li>購入者:  <span style="font-weight:bold">{{ client.name }}</span></li>
-      <li>配送先:  <span style="font-weight:bold">{{ client.address }}</span></li>
-      <li>電話番号:  <span style="font-weight:bold">{{ client.phone }}</span></li>
-      <li>備考:  <span style="font-weight:bold">{{ client.memo }}</span></li>
-    </ul>
+    <client :client="client"/>
     <infomations :errors="errors"/>
 
     <form>
@@ -45,17 +40,13 @@
 </template>
 
 <script>
+import Client from '@/components/partials/Client'
 import Infomations from '@/components/Infomations'
 export default {
-  components: { Infomations },
+  components: { Client, Infomations },
   data () {
     return {
-      client: {
-        name: '',
-        phone: '',
-        address: '',
-        memo: ''
-      },
+      client: {},
       items: [],
       form: {
         id: null,
@@ -69,11 +60,7 @@ export default {
     }
   },
   created: function () {
-    let client = JSON.parse(sessionStorage.getItem('client'))
-    this.client.name = client.name
-    this.client.phone = client.phone
-    this.client.address = client.address
-    this.client.memo = client.memo
+    this.client = JSON.parse(sessionStorage.getItem('client'))
   },
   methods: {
     add () {
