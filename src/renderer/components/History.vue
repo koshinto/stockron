@@ -19,13 +19,21 @@
       <hr/>
       合計
       <p>{{ data.amount }}</p>
-      <button class="btn agree">領収証を作成する</button>
+      <button class="btn agree" @click="genReceipt">領収証を作成する</button>
     </div>
   </div>
 </template>
 
 <script>
 import { ipcRenderer } from 'electron'
+import receipt from '../scripts/receipt'
+
+const from = {
+  name: 'XXX Inc.',
+  address: 'Hyogo, Japan',
+  phone: 'XXX-XXX-XXXX'
+}
+
 export default {
   data () {
     return {
@@ -42,7 +50,13 @@ export default {
     ipcRenderer.on('find:history-reply', (event, data) => {
       this.data = data
       this.nowLoading = false
+      console.log(this.data)
     })
+  },
+  methods: {
+    genReceipt () {
+      receipt(this.data, from)
+    }
   }
 }
 </script>
