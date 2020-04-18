@@ -1,7 +1,8 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain } from 'electron'
-import * as path from 'path'
+import path from 'path'
+import clearCache from './util/clearcache'
 import Datastore from 'nedb'
 import md5 from 'md5'
 import Basket from './basket'
@@ -50,6 +51,7 @@ function createWindow () {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
+  clearCache('dist/electron/cache/*.pdf')
   if (process.platform !== 'darwin') {
     app.quit()
   }

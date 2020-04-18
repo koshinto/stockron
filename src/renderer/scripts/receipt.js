@@ -1,9 +1,11 @@
 'use strict'
 /* eslint-disable */
 
+import { remote, shell } from 'electron'
 import PDFDocument from 'pdfkit'
-import { resolve } from 'path'
-import * as fs from 'fs'
+import path from 'path'
+import fs from 'fs'
+import config from '../datastore-config'
 
 // data = {
 //   items: [
@@ -31,24 +33,26 @@ import * as fs from 'fs'
  * receipt(data, from)
  */
 
-export default function receipt(data, from) {
+export default function receipt(data) {
   const date = new Date(data.date)
   const dateText = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
   const name = `${data.name} 様`
-  const corporate = [from.name, from.address, from.phone]
+  const from = config.get('from')
   const doc = new PDFDocument({
     size: [595, 847],
     margin: 30
   })
-  doc.font(resolve(__dirname, '..', 'assets', 'fonts', 'ipaexm.ttf'))
-  doc.pipe(fs.createWriteStream(`${data.hash}.pdf`))
-  // page 1
+  doc.font(path.resolve(__dirname, '..', 'assets', 'fonts', 'ipaexm.ttf'))
+  doc.pipe(fs.createWriteStream(`./dist/electron/cache/${data.hash}.pdf`))
+  // PAGE 1
   common(doc, dateText)
   doc.fontSize(30).text('領収証', 250, 50)
   doc.fontSize(18).text(name, 50, 100)
-  doc.fontSize(12).text(corporate[0], 420, 130).text(corporate[1], 420, 155).text(corporate[2], 420, 180)
+  // Print From data
+  doc.fontSize(12).text(from.name, 420, 130).text(from.address, 420, 160).text(from.phone, 420, 185)
   createTable(doc, data.items, data.amount, 225)
-  // page 2
+
+  // PAGE 2
   doc.addPage()
   common(doc, dateText)
   doc.fontSize(30).text('受注票', 250, 50)
@@ -70,6 +74,7 @@ export default function receipt(data, from) {
     .moveTo(350, 750).lineTo(350, 830).stroke()
     .moveTo(500, 750).lineTo(500, 830).stroke()
   doc.end()
+  open(data.hash)
 }
 
 function common(doc, dateText) {
@@ -91,4 +96,8 @@ function createTable(doc, items, amount, height) {
     y += 10
   })
   doc.fontSize(24).text(`合計 ${amount} 円`, 400, y + 20)
+}
+
+function open(filename) {
+  shell.openItem(path.join(remote.app.getAppPath(), 'cache', filename + '.pdf'))
 }

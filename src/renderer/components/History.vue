@@ -50,7 +50,6 @@ export default {
     ipcRenderer.on('find:history-reply', (event, data) => {
       this.data = data
       this.nowLoading = false
-      console.log(this.data)
     })
   },
   methods: {
