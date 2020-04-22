@@ -1,8 +1,9 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain } from 'electron'
+import fs from 'fs'
 import path from 'path'
-import clearCache from './util/clearcache'
+import clearFiles from './util/clearfiles'
 import Datastore from 'nedb'
 import md5 from 'md5'
 import Basket from './basket'
@@ -48,10 +49,18 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  const cachePath = path.join(app.getAppPath(), 'cache')
+  if (!fs.existsSync(cachePath)) {
+    fs.mkdir(cachePath, { recursive: true }, (err) => {
+      if (err) console.error(err)
+    })
+  }
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
-  clearCache('dist/electron/cache/*.pdf')
+  clearFiles('dist/electron/cache/*.pdf')
   if (process.platform !== 'darwin') {
     app.quit()
   }
@@ -64,15 +73,10 @@ app.on('activate', () => {
 })
 
 app.on('quit', () => {
-  if (process.env.NODE_ENV === 'development') datastore.remove({}, { multi: true })
+  if (process.env.NODE_ENV === 'development') {
+    datastore.remove({}, { multi: true })
+  }
 })
-
-function historyOfDatas () {
-  datastore.count({}, function (err, count) {
-    if (err) console.log(err)
-    console.log(`Datastore: ${count}`)
-  })
-}
 
 // let item1 = { name: 'Product Name', price: 000, value: 0, taxIncluded: bool }
 let basket = new Basket()
@@ -90,12 +94,11 @@ ipcMain.handle('request:receipt', async (e, args) => {
   doc.note = client.note
   /**
    * Change hash generate to Confirn Page
-   * Hash value is unique in DB
+   * Hash value is unique in Datastore
    * */
   const todayString = new Date().toString()
   doc.date = todayString
   doc.hash = md5(todayString)
-  console.log(doc)
   datastore.insert(doc)
   historyOfDatas()
   return doc.hash
@@ -114,6 +117,13 @@ ipcMain.on('find:history', (event, arg) => {
     event.sender.send('find:history-reply', doc)
   })
 })
+
+function historyOfDatas () {
+  datastore.count({}, function (err, count) {
+    if (err) console.log(err)
+    console.log(`Added to Datastore.\n${count} in Stored now.`)
+  })
+}
 
 /**
  * Auto Updater

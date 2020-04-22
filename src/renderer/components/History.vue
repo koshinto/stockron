@@ -28,12 +28,6 @@
 import { ipcRenderer } from 'electron'
 import receipt from '../scripts/receipt'
 
-const from = {
-  name: 'XXX Inc.',
-  address: 'Hyogo, Japan',
-  phone: 'XXX-XXX-XXXX'
-}
-
 export default {
   data () {
     return {
@@ -54,7 +48,7 @@ export default {
   },
   methods: {
     genReceipt () {
-      receipt(this.data, from)
+      receipt(this.data)
     }
   }
 }

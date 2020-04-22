@@ -7,32 +7,6 @@ import path from 'path'
 import fs from 'fs'
 import config from '../datastore-config'
 
-// data = {
-//   items: [
-//     { name: 'Apple', price: '300', quantity: '1', subtotal: 300 },
-//     { name: 'Banana', price: '300', quantity: '1', subtotal: 330 }
-//   ],
-//   amount: 630,
-//   name: 'foo',
-//   phone: 'baz',
-//   address: 'bar',
-//   note: 'foobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbazfoobarbaz',
-//   date: 'Mon Apr 06 2020 13:39:44 GMT+0900 (日本標準時)',
-//   hash: 'e921b0fad6f09f0d503b69c035097cfe'
-// }
-
-// from = {
-//   name: 'XXX Inc.',
-//   address: 'Hyogo, Japan',
-//   phone: 'XXX-XXX-XXXX'
-// }
-
-/**
- * Call function
- * 
- * receipt(data, from)
- */
-
 export default function receipt(data) {
   const date = new Date(data.date)
   const dateText = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
@@ -43,7 +17,7 @@ export default function receipt(data) {
     margin: 30
   })
   doc.font(path.resolve(__dirname, '..', 'assets', 'fonts', 'ipaexm.ttf'))
-  doc.pipe(fs.createWriteStream(`./dist/electron/cache/${data.hash}.pdf`))
+  const stream = doc.pipe(fs.createWriteStream(`./dist/electron/cache/${data.hash}.pdf`))
   // PAGE 1
   common(doc, dateText)
   doc.fontSize(30).text('領収証', 250, 50)
@@ -74,7 +48,7 @@ export default function receipt(data) {
     .moveTo(350, 750).lineTo(350, 830).stroke()
     .moveTo(500, 750).lineTo(500, 830).stroke()
   doc.end()
-  open(data.hash)
+  stream.on('finish', () => { open(data.hash )})
 }
 
 function common(doc, dateText) {
@@ -99,5 +73,9 @@ function createTable(doc, items, amount, height) {
 }
 
 function open(filename) {
-  shell.openItem(path.join(remote.app.getAppPath(), 'cache', filename + '.pdf'))
+  try {
+    shell.openItem(path.join(remote.app.getAppPath(), 'cache', filename + '.pdf'))
+  } catch (error) {
+    console.error(error)
+  }
 }
